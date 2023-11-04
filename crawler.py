@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import random
+from prettytable import PrettyTable
 
 
 name=input()
@@ -48,23 +49,33 @@ def title(soup):
 
 def price(soup):
     try:
-        price=soup.find("span",{"class":"a-price"}).find("span").text
+        price=soup.find("span",{"class":"a-price-whole"}).text.strip()
         return(price)
 
     except:
        return "N/A"
+    
+table = PrettyTable()
+table.field_names = ["Product Name", "Price"]
 
              
 for j in info:
     new_webpage = requests.get(j, headers=headers)
     new_soup = BeautifulSoup(new_webpage.text, "html.parser")
-    print(title(new_soup))
-    print(price(new_soup))
+    product_name = title(new_soup)
+    product_price = price(new_soup)
+    table.add_row([product_name, product_price])
     
-    print()
-print("REALINCE DIGITAL ------------------------------------------------------------")
+print(table)
+
+print("REALINCE DIGITAL---------------------------")
 links=soup1.find('div',{"class":"pl__container"})
-allLinks=links.find_all('a')
+try:
+    allLinks=links.find_all('a')
+except:
+    print("results N/A")
+
+
 for i in allLinks:
     text='https://www.reliancedigital.in'+i.get('href')+''
     info1.append(text)
@@ -82,14 +93,21 @@ def price1(soup):
 
     except:
        return "N/A"
-
+table1 = PrettyTable()
+table1.field_names = ["Product Name", "Price"]
 for j in info1:
     new_webpage = requests.get(j, headers=headers)
     new_soup = BeautifulSoup(new_webpage.text, "html.parser")
-    print(title1(new_soup))
-    print(price1(new_soup))
+    product_name1 = title1(new_soup)
+    product_price1 = price1(new_soup)
+    table1.add_row([product_name1, product_price1])
+
     
-    print()
+print(table1)
+
+
+
+
 
 
 
